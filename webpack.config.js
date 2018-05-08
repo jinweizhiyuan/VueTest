@@ -101,7 +101,32 @@ if (isDev) {
         new webpack.NoEmitOnErrorsPlugin()
     )
 } else {
-    config.output.filename = '[name].[chunkhash:8].js'
+    config.entry = {
+        app: path.join(__dirname, 'src/index.js'),
+        // vendor: ['vue']
+    };
+    config.output.filename = '[name].[chunkhash:8].js';
+    config.optimization = {
+        splitChunks: {
+            cacheGroups: {
+                default: false,
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/, // you may add "vendor.js" here if you want to
+                    name: 'vendor',
+                    chunks: 'all',
+                    enforce: true,
+                },
+            },
+        },
+        runtimeChunk: {
+            name: 'runtime',
+        },
+        // minimizer: [
+        //     new MinifyPlugin(),
+        //     new OptimizeJsPlugin({ sourceMap: false }),
+        // ],
+        occurrenceOrder: true,
+    };
     config.module.rules.push({
         test: /\.styl$/,
         use: ExtractTextPlugin.extract({
