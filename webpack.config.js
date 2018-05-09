@@ -1,7 +1,8 @@
 const path = require('path');
 const HTMLPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+var openInEditor = require('launch-editor-middleware');
 
 const isDev = process.env.NODE_ENV == 'development';
 
@@ -93,6 +94,9 @@ if (isDev) {
         },
         // historyFallback
         hot: true,
+        before (app) {
+            app.use('/__open-in-editor', openInEditor())
+        }
         // open: true
     }
 
